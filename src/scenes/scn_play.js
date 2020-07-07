@@ -20,29 +20,96 @@ class Scn_play extends Phaser.Scene
         //Back
         this.backframe = this.add.image(0,80,"backFrame");
         this.backframe.setOrigin(0,0);
-
-        //boton
-        this.btnSpin = this.add.sprite(this.sys.game.config.width/2 + 150,this.sys.game.config.height - 50,"button");
-        this.btnSpin.setInteractive();
-
-        //puntos
-        this.points = this.add.image(95,this.sys.game.config.height - 50,'prizeWindow');
-        this.textPoints = this.add.text(this.points.x,this.points.y,'prize: $0',
-        {
-            fontSize : 20,
-            align : 'center',
-            color : '#263e71',
-            fontStyle : 'bold',
-            fontFamily : 'arialblk'
-        });
-        this.textPoints.setOrigin(0.5,0.5);
         
-        //Symbols
-        this.symbola = new symbol(this,100,300,"syma","a");
-        this.symbolb = new symbol(this,150,300,"symb","b");
-        this.symbolc = new symbol(this,200,300,"symc","c");
-        this.symbold = new symbol(this,250,300,"symd","d");
-        this.symbole = new symbol(this,300,300,"syme","e");
+        // //Symbols
+        this.barGroup = this.add.group();
+
+        this.reels = wrapper.getReels()
+        
+        for(var i = 0;i<this.reels.length;i++)
+        {
+            
+           // console.log('bar' + this.reels[i]);
+            for(var j = 0; j<this.reels[i].length;j++)
+            {
+                // this.groupWraper = this.add.group();    
+                //console.log('wrapper' + this.reels[i][j]);
+                var offsety = 150;
+                var offsetx = 150;
+                switch(this.reels[i][j])
+                {
+                    case "a":
+                        //console.log('a');
+                        var image = new symbol(this,(this.backframe.x + offsetx * i),(this.backframe.y + offsety *j),"syma","a");
+                        this.barGroup.add(image);
+                    break;
+                    case "b":
+                        //console.log('b');
+                        var image = new symbol(this,(this.backframe.x + offsetx * i),(this.backframe.y + offsety *j),"symb","b");
+                        this.barGroup.add(image);
+                    break;
+                    case "c":
+                        //console.log('c');
+                        var image = new symbol(this,(this.backframe.x + offsetx* i),(this.backframe.y + offsety *j),"symc","c");
+                        this.barGroup.add(image);
+                    break;
+                    case "d":
+                        //console.log('d');
+                        var image = new symbol(this,(this.backframe.x + offsetx* i),(this.backframe.y + offsety *j),"symd","d");
+                        this.barGroup.add(image);
+                    break;
+                    case "e":
+                        //console.log('e');
+                        var image = new symbol(this,(this.backframe.x + offsetx* i),(this.backframe.y + offsety *j),"syme","e");
+                        this.barGroup.add(image);
+                    break;
+                }
+                  
+            }
+            
+        }
+
+        console.log(this.barGroup);
+        this.barGroup.children.entries.map((element) =>
+        {
+            element.x += 95;
+            element.y += 95;
+            element.stepX = 50;
+            element.setScale(0.9);
+        });
+
+        this.bar1 = this.add.group();
+        this.bar2 = this.add.group();
+        this.bar3 = this.add.group();
+
+        for(var i=0;i<20;i++)
+        {
+            this.bar1.add(this.barGroup.children.entries[i]);
+
+        }
+        for(var i=20;i<40;i++)
+        {
+            this.bar2.add(this.barGroup.children.entries[i]);
+        }
+        for(var i=40;i<60;i++)
+        {
+            this.bar3.add(this.barGroup.children.entries[i]);
+        }
+           //boton
+           this.btnSpin = this.add.sprite(this.sys.game.config.width/2 + 150,this.sys.game.config.height - 50,"button");
+           this.btnSpin.setInteractive();
+   
+           //puntos
+           this.points = this.add.image(95,this.sys.game.config.height - 50,'prizeWindow');
+           this.textPoints = this.add.text(this.points.x,this.points.y,'WIN: $0',
+           {
+               fontSize : 23,
+               align : 'center',
+               color : '#263e71',
+               fontStyle : 'bold',
+               fontFamily : 'Arial'
+           });
+           this.textPoints.setOrigin(0.5,0.5);     
         
         //lines prize
         this.posLine1x = this.backframe.x + 20;
@@ -53,6 +120,12 @@ class Scn_play extends Phaser.Scene
         this.line1 = this.add.image(this.posLine1x,this.posLine1y,'line1');
         this.line1.setOrigin(0,0.5);
 
+        this.line2 = this.add.image(this.posLine1x,this.posLine1y,'line1');
+        this.line2.setOrigin(0,0.5);
+
+        this.line3 = this.add.image(this.posLine1x,this.posLine1y,'line1');
+        this.line3.setOrigin(0,0.5);
+
         this.line4 = this.add.image(this.posLine1x+10,110,'line4');
         this.line4.setOrigin(0,0);
 
@@ -60,12 +133,16 @@ class Scn_play extends Phaser.Scene
         this.line5.setOrigin(0,0);
         
         this.line1.setVisible(false);
+        this.line2.setVisible(false);
+        this.line3.setVisible(false);
         this.line4.setVisible(false);
         this.line5.setVisible(false);
 
         this.registry.events.on('cleanLine',()=>
         {
             this.line1.setVisible(false);
+            this.line2.setVisible(false);
+            this.line3.setVisible(false);
             this.line4.setVisible(false);
             this.line5.setVisible(false);
         });
@@ -76,15 +153,12 @@ class Scn_play extends Phaser.Scene
             {
                 case 0:
                     this.line1.setVisible(true);
-                    this.line1.setY(this.posLine2y);
                 break;
                 case 1:
-                    this.line1.setVisible(true);
-                    this.line1.setY(this.posLine1y);
+                    this.line2.setVisible(true);
                 break;
                 case 2:
-                    this.line1.setVisible(true);
-                    this.line1.setY(this.posLine3y);
+                    this.line3.setVisible(true);
                 break;
                 case 3:
                     this.line4.setVisible(true);
@@ -108,7 +182,7 @@ class Scn_play extends Phaser.Scene
                 this.registry.events.emit('setLine',(this.prize[i].lineId));
                 console.log(this.prize[i].lineId);
             }
-            debugger;
+            
             this.textPoints.setText('WIN: $'+this.SpinResults.winnings);
         });
 
