@@ -8,7 +8,7 @@ const config =
     parent: "container",
     type: Phaser.AUTO,
 
-    backgroundColor: '#000000',
+    backgroundColor: '#ffffff',
     scene: 
     [
         Bootloader,

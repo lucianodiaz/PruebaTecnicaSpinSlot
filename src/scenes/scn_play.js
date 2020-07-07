@@ -76,16 +76,17 @@ class Scn_play extends Phaser.Scene
             element.y += 95;
             element.stepX = 50;
             element.setScale(0.9);
+            if(element.y > 530){element.setVisible(false)};
         });
 
         this.bar1 = this.add.group();
         this.bar2 = this.add.group();
         this.bar3 = this.add.group();
 
+        this.backY = this.backframe.y + 450;
         for(var i=0;i<20;i++)
         {
             this.bar1.add(this.barGroup.children.entries[i]);
-
         }
         for(var i=20;i<40;i++)
         {
@@ -95,6 +96,29 @@ class Scn_play extends Phaser.Scene
         {
             this.bar3.add(this.barGroup.children.entries[i]);
         }
+
+        // this.bar1.children.entries.map((element) =>
+        // {
+        //     let timeline = this.tweens.timeline({
+        //         targets : element,
+        //         ease : 'Linear',
+        //         duration : 3000,
+        //         tweens :[
+        //             {
+        //                 y:175
+        //             },
+        //             {
+        //                 y: 3025,
+        //                 offset: "-=3000"
+        //             }
+        //         ]                
+        //     });
+            
+        // });
+        // var y = this.backframe.y + 450;
+        // this.add.rectangle(this.backframe.x,y,10,10,0xff0000);
+        // console.log('x: ' + this.backframe.x + ' y: ' +y);
+
            //boton
            this.btnSpin = this.add.sprite(this.sys.game.config.width/2 + 150,this.sys.game.config.height - 50,"button");
            this.btnSpin.setInteractive();
@@ -113,17 +137,17 @@ class Scn_play extends Phaser.Scene
         
         //lines prize
         this.posLine1x = this.backframe.x + 20;
-        this.posLine1y = this.backframe.y + 80;
+        this.posLine1y = this.backframe.y + 90;
         this.posLine2y = this.backframe.y + 240;
-        this.posLine3y = this.backframe.y + 410;
+        this.posLine3y = this.backframe.y + 400;
 
         this.line1 = this.add.image(this.posLine1x,this.posLine1y,'line1');
         this.line1.setOrigin(0,0.5);
 
-        this.line2 = this.add.image(this.posLine1x,this.posLine1y,'line1');
+        this.line2 = this.add.image(this.posLine1x,this.posLine2y,'line1');
         this.line2.setOrigin(0,0.5);
 
-        this.line3 = this.add.image(this.posLine1x,this.posLine1y,'line1');
+        this.line3 = this.add.image(this.posLine1x,this.posLine3y,'line1');
         this.line3.setOrigin(0,0.5);
 
         this.line4 = this.add.image(this.posLine1x+10,110,'line4');
