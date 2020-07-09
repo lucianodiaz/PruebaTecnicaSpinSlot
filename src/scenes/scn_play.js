@@ -69,13 +69,19 @@ class Scn_play extends Phaser.Scene
             
         }
 
-        console.log(this.barGroup);
+        //console.log(this.barGroup);
         this.barGroup.children.entries.map((element) =>
         {
             element.x += 95;
             element.y += 95;
             element.stepX = 50;
             element.setScale(0.9);
+            element.setInteractive();
+            // element.on("pointerdown", () =>
+            // {
+            //     //this.registry.events.emit('spin',this.bar1,this.bar2,this.bar3);    
+            //     element.alpha = 0.0;
+            // });
             if(element.y > 530){element.setVisible(false)};
         });
 
@@ -96,29 +102,9 @@ class Scn_play extends Phaser.Scene
         {
             this.bar3.add(this.barGroup.children.entries[i]);
         }
-
-        // this.bar1.children.entries.map((element) =>
-        // {
-        //     let timeline = this.tweens.timeline({
-        //         targets : element,
-        //         ease : 'Linear',
-        //         duration : 3000,
-        //         tweens :[
-        //             {
-        //                 y:175
-        //             },
-        //             {
-        //                 y: 3025,
-        //                 offset: "-=3000"
-        //             }
-        //         ]                
-        //     });
-            
-        // });
-        // var y = this.backframe.y + 450;
-        // this.add.rectangle(this.backframe.x,y,10,10,0xff0000);
-        // console.log('x: ' + this.backframe.x + ' y: ' +y);
-
+        console.log(this.bar1);
+        console.log(this.bar2);
+        console.log(this.bar3);
            //boton
            this.btnSpin = this.add.sprite(this.sys.game.config.width/2 + 150,this.sys.game.config.height - 50,"button");
            this.btnSpin.setInteractive();
@@ -171,6 +157,128 @@ class Scn_play extends Phaser.Scene
             this.line5.setVisible(false);
         });
 
+        this.registry.events.on('spinBar',(idSymbolReel) =>
+        {
+            //Bar: el bar que se va a 'girar' 
+            //Reel: con el que se va a comparar al Bar
+            //idSymbolReel: id del simbolo dentro del reel
+            
+            this.Bar;
+            switch(idSymbolReel)
+            {
+                case 0:
+                    this.Bar = this.bar1;
+                break;
+                case 1:
+                    this.Bar = this.bar2;
+                break;
+                case 2:
+                    this.Bar = this.bar3;
+                break;
+            }
+            for(var i=0; i<this.Bar.children.entries.length;i++)
+            {
+                this.Bar.children.entries[i].layout = false;
+            }
+            // console.log('------------------------------');
+            // console.log(this.Bar);
+             console.log(this.reelsLayout[idSymbolReel]);
+            // console.log(idSymbolReel);
+            // console.log('------------------------------');
+            for(var i=0; i< this.Bar.children.entries.length;i++)
+            {
+                // console.log('primer dato a comparar');
+                // console.log(this.Bar.children.entries[i].code);
+                // console.log(this.reelsLayout[idSymbolReel][0]);
+                // console.log('------------------------');
+                if(this.Bar.children.entries[i].code == this.reelsLayout[idSymbolReel][0])
+                {
+                    var j = i;
+                    if(j + 1 == 20)
+                    {
+                        //En esta seccion verifica que si ha llegado a la posicion 20, eso quiere decir que va a seleccionar la pos 0 y luego la 1
+                        //console.log('es mas de 20');
+                        j = 0;
+                        if(this.Bar.children.entries[j].code == this.reelsLayout[idSymbolReel][1])
+                        {
+                            //console.log('segunda coincidencia');
+                            // j++;
+                            if(this.Bar.children.entries[j+1].code == this.reelsLayout[1][2])
+                            {
+                                //console.log('tercera coincidencia');
+                                this.Bar.children.entries[j+1].layout = true;
+                                this.Bar.children.entries[j].layout = true;
+                                this.Bar.children.entries[i].layout = true;
+                                this.Bar.children.entries[j+1].y = 475;
+                                this.Bar.children.entries[j].y = 325;
+                                this.Bar.children.entries[i].y = 175;
+                                break;
+                            }
+                            else
+                            {
+                                this.Bar.children.entries[j+1].y = 3025;
+                            }
+                        }
+                        else
+                        {
+                            this.Bar.children.entries[j].y = 3025;
+                        }
+                    }
+                    else
+                    {
+                        // console.log('segundo dato a comparar');
+                        // console.log(this.Bar.children.entries[i+1].code);
+                        // console.log(this.reelsLayout[idSymbolReel][1]);
+                        // console.log('------------------------');
+                        if(this.Bar.children.entries[i+1].code == this.reelsLayout[idSymbolReel][1])
+                        {
+                            console.log(i+2);
+                            var j = i; // esto es por si se sale del rango del Array
+                            if( j+2 == 20)
+                            {
+                                j =0;
+                            }
+                            else if(j + 2 == 21)
+                            {
+                                j = 1;
+                            }
+                            else
+                            {
+                                j +=2;
+                            }
+                            // console.log('tercer dato a comparar');
+                            // console.log(this.Bar.children.entries[j].code);
+                            // console.log(this.reelsLayout[idSymbolReel][2]);
+                            // console.log(this.Bar.children.entries[j]);
+                            // console.log('------------------------');
+                            if(this.Bar.children.entries[j].code ==this.reelsLayout[idSymbolReel][2])
+                             {
+                                this.Bar.children.entries[j].y = 475;
+                                this.Bar.children.entries[i+1].y = 325;
+                                this.Bar.children.entries[i].y = 175;
+                                break;
+                             }
+                             else
+                             {
+                                // console.log('no encontro tercera referencia');
+                                //this.Bar.children.entries[i+2].y = 3025;
+                             }
+                        }
+                        else
+                        {
+                            //console.log('No encontro la segunda referencia');
+                            //this.Bar.children.entries[i+1].y = 3025;
+                        }
+                    }
+                }
+                else
+                {
+                    //this.Bar.children.entries[i].y = 3025;
+                    //this.Bar.children.entries[i].setVisible(false);
+                }
+            }
+        });
+
         this.registry.events.on('setLine',(lineId) =>
         {
             switch(lineId)
@@ -193,18 +301,20 @@ class Scn_play extends Phaser.Scene
             }
         });
 
-        this.registry.events.on('spin',() =>
+        this.registry.events.on('spin',(bar1,bar2,bar3) =>
         {
             this.registry.events.emit('cleanLine');
             this.SpinResults = wrapper.spin();
-
             console.log(this.SpinResults);
             this.prize = wrapper.getPrizes(this.SpinResults.stopPoints)
-
+            this.reelsLayout = this.SpinResults.reelsLayout;
+            this.registry.events.emit('spinBar',0);
+            this.registry.events.emit('spinBar',1);
+            this.registry.events.emit('spinBar',2);
             for(var i = 0; i < this.prize.length; i++)
             {
                 this.registry.events.emit('setLine',(this.prize[i].lineId));
-                console.log(this.prize[i].lineId);
+                //console.log(this.prize[i].lineId);
             }
             
             this.textPoints.setText('WIN: $'+this.SpinResults.winnings);
@@ -222,11 +332,73 @@ class Scn_play extends Phaser.Scene
 
         this.btnSpin.on("pointerdown", () =>
         {
-            this.registry.events.emit('spin');    
+            this.registry.events.emit('spin',this.bar1,this.bar2,this.bar3);    
         });
 
     }
 
+
+    update()
+    {
+        // this.velocity = 15;
+        // for(var i = 0; i < this.bar1.children.entries.length; i++)
+        // {
+        //     this.bar1.children.entries[i].y +=  this.velocity;
+        //     if(this.bar1.children.entries[i].y >= 3165)
+        //     {
+        //         this.bar1.children.entries[i].y = 175;
+        //     }
+        // }
+        // for(var i = 0; i < this.bar2.children.entries.length; i++)
+        // {
+        //     this.bar2.children.entries[i].y +=  this.velocity;
+        //     if(this.bar2.children.entries[i].y >= 3165)
+        //     {
+        //         this.bar2.children.entries[i].y = 175;
+        //     }
+        // }
+        // for(var i = 0; i < this.bar3.children.entries.length; i++)
+        // {
+        //     this.bar3.children.entries[i].y +=  this.velocity;
+        //     if(this.bar3.children.entries[i].y >= 3165)
+        //     {
+        //         this.bar3.children.entries[i].y = 175;
+        //     }
+        // }
+        this.bar1.children.entries.map((element) =>
+        {
+            if(element.y > 480)
+            {
+                element.setVisible(false);
+            }
+            if(element.y < 510 && element.y >= 165)
+            {
+                element.setVisible(true);
+            }
+        });
+        this.bar2.children.entries.map((element) =>
+        {
+            if(element.y > 530)
+            {
+                element.setVisible(false);
+            }
+            if(element.y < 530 && element.y >= 175)
+            {
+                element.setVisible(true);
+            }
+        });
+        this.bar3.children.entries.map((element) =>
+        {
+            if(element.y > 530)
+            {
+                element.setVisible(false);
+            }
+            if(element.y < 530 && element.y >= 175)
+            {
+                element.setVisible(true);
+            }
+        });
+    }
    
 
 }
