@@ -13,7 +13,6 @@ const config =
     [
         Bootloader,
         Scn_play
-       
     ]
 }
 

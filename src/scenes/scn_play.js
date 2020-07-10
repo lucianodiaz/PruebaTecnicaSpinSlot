@@ -77,11 +77,11 @@ class Scn_play extends Phaser.Scene
             element.stepX = 50;
             element.setScale(0.9);
             element.setInteractive();
-            // element.on("pointerdown", () =>
-            // {
-            //     //this.registry.events.emit('spin',this.bar1,this.bar2,this.bar3);    
-            //     element.alpha = 0.0;
-            // });
+            element.on("pointerdown", () =>
+            {
+                //this.registry.events.emit('spin',this.bar1,this.bar2,this.bar3);    
+                element.alpha = 0.0;
+            });
             if(element.y > 530){element.setVisible(false)};
         });
 
@@ -105,6 +105,9 @@ class Scn_play extends Phaser.Scene
         console.log(this.bar1);
         console.log(this.bar2);
         console.log(this.bar3);
+
+       
+  
            //boton
            this.btnSpin = this.add.sprite(this.sys.game.config.width/2 + 150,this.sys.game.config.height - 50,"button");
            this.btnSpin.setInteractive();
@@ -148,6 +151,11 @@ class Scn_play extends Phaser.Scene
         this.line4.setVisible(false);
         this.line5.setVisible(false);
 
+        //variables
+        this.velocityBar1 = 0;
+        this.velocityBar2 = 0;
+        this.velocityBar3 = 0;
+
         this.registry.events.on('cleanLine',()=>
         {
             this.line1.setVisible(false);
@@ -176,10 +184,6 @@ class Scn_play extends Phaser.Scene
                     this.Bar = this.bar3;
                 break;
             }
-            for(var i=0; i<this.Bar.children.entries.length;i++)
-            {
-                this.Bar.children.entries[i].layout = false;
-            }
             // console.log('------------------------------');
             // console.log(this.Bar);
              console.log(this.reelsLayout[idSymbolReel]);
@@ -206,22 +210,26 @@ class Scn_play extends Phaser.Scene
                             if(this.Bar.children.entries[j+1].code == this.reelsLayout[1][2])
                             {
                                 //console.log('tercera coincidencia');
+                                for(var i=0; i<this.Bar.children.entries.length;i++)
+                                {
+                                    this.Bar.children.entries[i].layout = false;
+                                }
                                 this.Bar.children.entries[j+1].layout = true;
                                 this.Bar.children.entries[j].layout = true;
                                 this.Bar.children.entries[i].layout = true;
-                                this.Bar.children.entries[j+1].y = 475;
-                                this.Bar.children.entries[j].y = 325;
-                                this.Bar.children.entries[i].y = 175;
+                            //     this.Bar.children.entries[j+1].y = 475;
+                            //    this.Bar.children.entries[j].y = 325;
+                            //     this.Bar.children.entries[i].y = 175;
                                 break;
                             }
                             else
                             {
-                                this.Bar.children.entries[j+1].y = 3025;
+                                //this.Bar.children.entries[j+1].y = 3025;
                             }
                         }
                         else
                         {
-                            this.Bar.children.entries[j].y = 3025;
+                            //this.Bar.children.entries[j].y = 3025;
                         }
                     }
                     else
@@ -253,9 +261,16 @@ class Scn_play extends Phaser.Scene
                             // console.log('------------------------');
                             if(this.Bar.children.entries[j].code ==this.reelsLayout[idSymbolReel][2])
                              {
-                                this.Bar.children.entries[j].y = 475;
-                                this.Bar.children.entries[i+1].y = 325;
-                                this.Bar.children.entries[i].y = 175;
+                                // this.Bar.children.entries[j].y = 475;
+                                // this.Bar.children.entries[i+1].y = 325;
+                                // this.Bar.children.entries[i].y = 175;
+                                for(var z=0; z<this.Bar.children.entries.length;z++)
+                                {
+                                    this.Bar.children.entries[z].layout = false;
+                                }
+                                this.Bar.children.entries[j].layout = true;
+                                this.Bar.children.entries[i+1].layout = true;
+                                this.Bar.children.entries[i].layout = true;
                                 break;
                              }
                              else
@@ -300,7 +315,6 @@ class Scn_play extends Phaser.Scene
                 break;
             }
         });
-
         this.registry.events.on('spin',(bar1,bar2,bar3) =>
         {
             this.registry.events.emit('cleanLine');
@@ -309,8 +323,11 @@ class Scn_play extends Phaser.Scene
             this.prize = wrapper.getPrizes(this.SpinResults.stopPoints)
             this.reelsLayout = this.SpinResults.reelsLayout;
             this.registry.events.emit('spinBar',0);
+            this.velocityBar1 = 12;
             this.registry.events.emit('spinBar',1);
+            this.velocityBar2 = 12;
             this.registry.events.emit('spinBar',2);
+            this.velocityBar3 = 12;
             for(var i = 0; i < this.prize.length; i++)
             {
                 this.registry.events.emit('setLine',(this.prize[i].lineId));
@@ -337,34 +354,92 @@ class Scn_play extends Phaser.Scene
 
     }
 
-
     update()
     {
-        // this.velocity = 15;
-        // for(var i = 0; i < this.bar1.children.entries.length; i++)
-        // {
-        //     this.bar1.children.entries[i].y +=  this.velocity;
-        //     if(this.bar1.children.entries[i].y >= 3165)
-        //     {
-        //         this.bar1.children.entries[i].y = 175;
-        //     }
-        // }
-        // for(var i = 0; i < this.bar2.children.entries.length; i++)
-        // {
-        //     this.bar2.children.entries[i].y +=  this.velocity;
-        //     if(this.bar2.children.entries[i].y >= 3165)
-        //     {
-        //         this.bar2.children.entries[i].y = 175;
-        //     }
-        // }
-        // for(var i = 0; i < this.bar3.children.entries.length; i++)
-        // {
-        //     this.bar3.children.entries[i].y +=  this.velocity;
-        //     if(this.bar3.children.entries[i].y >= 3165)
-        //     {
-        //         this.bar3.children.entries[i].y = 175;
-        //     }
-        // }
+            for(var i = 0; i < this.bar1.children.entries.length; i++)
+            {
+                this.bar1.children.entries[i].y +=  this.velocityBar1;
+                if(this.bar1.children.entries[i].y >= 3165)
+                {
+                    this.bar1.children.entries[i].y = 175;
+                }
+                var j = i; // esto es por si se sale del rango del Array
+                if( j+2 == 20)
+                {
+                    j =0;
+                }
+                else if(j + 2 == 21)
+                {
+                    j = 1;
+                }
+                else
+                {
+                    j +=2;
+                }
+
+                if(this.bar1.children.entries[j].layout == true && this.bar1.children.entries[j].y == 475)
+                {
+                    this.velocityBar1 = 0;
+                }
+                
+            }
+
+            for(var i = 0; i < this.bar2.children.entries.length; i++)
+            {
+                this.bar2.children.entries[i].y +=  this.velocityBar2;
+                if(this.bar2.children.entries[i].y >= 3165)
+                {
+                    this.bar2.children.entries[i].y = 175;
+                }
+                var j = i; // esto es por si se sale del rango del Array
+                if( j+2 == 20)
+                {
+                    j =0;
+                }
+                else if(j + 2 == 21)
+                {
+                    j = 1;
+                }
+                else
+                {
+                    j +=2;
+                }
+
+                if(this.bar2.children.entries[j].layout == true && this.bar2.children.entries[j].y == 475)
+                {
+                    this.velocityBar2 = 0;
+                }
+            }
+
+
+            for(var i = 0; i < this.bar3.children.entries.length; i++)
+            {
+                this.bar3.children.entries[i].y +=  this.velocityBar3;
+                if(this.bar3.children.entries[i].y >= 3165)
+                {
+                    this.bar3.children.entries[i].y = 175;
+                }
+                var j = i; // esto es por si se sale del rango del Array
+                if( j+2 == 20)
+                {
+                    j =0;
+                }
+                else if(j + 2 == 21)
+                {
+                    j = 1;
+                }
+                else
+                {
+                    j +=2;
+                }
+
+                if(this.bar3.children.entries[j].layout == true && this.bar3.children.entries[j].y == 475)
+                {
+                    this.velocityBar3 = 0;
+                }
+            }
+
+      
         this.bar1.children.entries.map((element) =>
         {
             if(element.y > 480)
@@ -378,22 +453,22 @@ class Scn_play extends Phaser.Scene
         });
         this.bar2.children.entries.map((element) =>
         {
-            if(element.y > 530)
+            if(element.y > 480)
             {
                 element.setVisible(false);
             }
-            if(element.y < 530 && element.y >= 175)
+            if(element.y < 510 && element.y >= 165)
             {
                 element.setVisible(true);
             }
         });
         this.bar3.children.entries.map((element) =>
         {
-            if(element.y > 530)
+            if(element.y > 480)
             {
                 element.setVisible(false);
             }
-            if(element.y < 530 && element.y >= 175)
+            if(element.y < 510 && element.y >= 165)
             {
                 element.setVisible(true);
             }
