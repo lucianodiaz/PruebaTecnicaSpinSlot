@@ -80,7 +80,7 @@ class Scn_play extends Phaser.Scene
             element.on("pointerdown", () =>
             {
                 //this.registry.events.emit('spin',this.bar1,this.bar2,this.bar3);    
-                element.alpha = 0.0;
+                console.log(element.layout);
             });
             if(element.y > 530){element.setVisible(false)};
         });
@@ -102,9 +102,9 @@ class Scn_play extends Phaser.Scene
         {
             this.bar3.add(this.barGroup.children.entries[i]);
         }
-        console.log(this.bar1);
-        console.log(this.bar2);
-        console.log(this.bar3);
+        // console.log(this.bar1);
+        // console.log(this.bar2);
+        // console.log(this.bar3);
 
        
   
@@ -189,6 +189,10 @@ class Scn_play extends Phaser.Scene
              console.log(this.reelsLayout[idSymbolReel]);
             // console.log(idSymbolReel);
             // console.log('------------------------------');
+            for(var i=0; i<this.Bar.children.entries.length;i++)
+            {
+                this.Bar.children.entries[i].layout = false;
+            }
             for(var i=0; i< this.Bar.children.entries.length;i++)
             {
                 // console.log('primer dato a comparar');
@@ -197,8 +201,31 @@ class Scn_play extends Phaser.Scene
                 // console.log('------------------------');
                 if(this.Bar.children.entries[i].code == this.reelsLayout[idSymbolReel][0])
                 {
-                    var j = i;
-                    if(j + 1 == 20)
+                    var j = i; // esto es por si se sale del rango del Array
+                    if(j == 19)
+                    {
+                        console.log('llego a: ' + j);
+                        j = 0;
+                        if(this.Bar.children.entries[j].code == this.reelsLayout[idSymbolReel][1])
+                        {
+                            //console.log('segunda coincidencia');
+                            // j++;
+                            if(this.Bar.children.entries[j+1].code == this.reelsLayout[idSymbolReel][2])
+                            {
+                                console.log('tercera coincidencia');
+                                this.Bar.children.entries[j+1].layout = true;
+                                this.Bar.children.entries[j].layout = true;
+                                console.log(i);
+                                this.Bar.children.entries[i].layout = true;
+                                break;
+                            }
+                            else
+                            {
+                                //this.Bar.children.entries[j+1].y = 3025;
+                            }
+                        }
+                    }  
+                    else if(j + 1 == 20)
                     {
                         //En esta seccion verifica que si ha llegado a la posicion 20, eso quiere decir que va a seleccionar la pos 0 y luego la 1
                         //console.log('es mas de 20');
@@ -207,19 +234,13 @@ class Scn_play extends Phaser.Scene
                         {
                             //console.log('segunda coincidencia');
                             // j++;
-                            if(this.Bar.children.entries[j+1].code == this.reelsLayout[1][2])
+                            if(this.Bar.children.entries[j+1].code == this.reelsLayout[idSymbolReel][2])
                             {
-                                //console.log('tercera coincidencia');
-                                for(var i=0; i<this.Bar.children.entries.length;i++)
-                                {
-                                    this.Bar.children.entries[i].layout = false;
-                                }
+                                console.log('tercera coincidencia');
                                 this.Bar.children.entries[j+1].layout = true;
                                 this.Bar.children.entries[j].layout = true;
-                                this.Bar.children.entries[i].layout = true;
-                            //     this.Bar.children.entries[j+1].y = 475;
-                            //    this.Bar.children.entries[j].y = 325;
-                            //     this.Bar.children.entries[i].y = 175;
+                                console.log(i);
+                                this.Bar.children.entries[i-1].layout = true;
                                 break;
                             }
                             else
@@ -232,15 +253,34 @@ class Scn_play extends Phaser.Scene
                             //this.Bar.children.entries[j].y = 3025;
                         }
                     }
-                    else
+                    else if(j + 1 == 21)
                     {
-                        // console.log('segundo dato a comparar');
-                        // console.log(this.Bar.children.entries[i+1].code);
-                        // console.log(this.reelsLayout[idSymbolReel][1]);
-                        // console.log('------------------------');
+                        j=1;
+                        if(this.Bar.children.entries[j].code == this.reelsLayout[idSymbolReel][1])
+                        {
+                            //console.log('segunda coincidencia');
+                            // j++;
+                            if(this.Bar.children.entries[j+1].code == this.reelsLayout[idSymbolReel][2])
+                            {
+                                //console.log('tercera coincidencia');
+                                this.Bar.children.entries[j+1].layout = true;
+                                this.Bar.children.entries[j].layout = true;
+                                this.Bar.children.entries[i].layout = true;
+                                break;
+                            }
+                            else
+                            {
+                                //this.Bar.children.entries[j+1].y = 3025;
+                            }
+                        }
+                    }
+                    else
+                    {    
+                        console.log(i+1);
+                        
                         if(this.Bar.children.entries[i+1].code == this.reelsLayout[idSymbolReel][1])
                         {
-                            console.log(i+2);
+                            //console.log(i+2);
                             var j = i; // esto es por si se sale del rango del Array
                             if( j+2 == 20)
                             {
@@ -264,10 +304,8 @@ class Scn_play extends Phaser.Scene
                                 // this.Bar.children.entries[j].y = 475;
                                 // this.Bar.children.entries[i+1].y = 325;
                                 // this.Bar.children.entries[i].y = 175;
-                                for(var z=0; z<this.Bar.children.entries.length;z++)
-                                {
-                                    this.Bar.children.entries[z].layout = false;
-                                }
+                                console.log('Tercera coincidencia');
+                                console.log(j);console.log(i);
                                 this.Bar.children.entries[j].layout = true;
                                 this.Bar.children.entries[i+1].layout = true;
                                 this.Bar.children.entries[i].layout = true;
@@ -299,10 +337,10 @@ class Scn_play extends Phaser.Scene
             switch(lineId)
             {
                 case 0:
-                    this.line1.setVisible(true);
+                    this.line2.setVisible(true);
                 break;
                 case 1:
-                    this.line2.setVisible(true);
+                    this.line1.setVisible(true);
                 break;
                 case 2:
                     this.line3.setVisible(true);
@@ -321,13 +359,17 @@ class Scn_play extends Phaser.Scene
             this.SpinResults = wrapper.spin();
             console.log(this.SpinResults);
             this.prize = wrapper.getPrizes(this.SpinResults.stopPoints)
+            // console.log(this.SpinResults);
             this.reelsLayout = this.SpinResults.reelsLayout;
+            console.log(this.bar1);
+            console.log(this.bar2);
+            console.log(this.bar3);
             this.registry.events.emit('spinBar',0);
-            this.velocityBar1 = 12;
+            this.velocityBar1 = .08;
             this.registry.events.emit('spinBar',1);
-            this.velocityBar2 = 12;
+            this.velocityBar2 = .08;
             this.registry.events.emit('spinBar',2);
-            this.velocityBar3 = 12;
+            this.velocityBar3 = .08;
             for(var i = 0; i < this.prize.length; i++)
             {
                 this.registry.events.emit('setLine',(this.prize[i].lineId));
@@ -358,9 +400,10 @@ class Scn_play extends Phaser.Scene
     {
             for(var i = 0; i < this.bar1.children.entries.length; i++)
             {
-                this.bar1.children.entries[i].y +=  this.velocityBar1;
+                this.bar1.children.entries[i].y +=  this.velocityBar1 *this.bar1.children.entries[i].height;
                 if(this.bar1.children.entries[i].y >= 3165)
                 {
+                    console.log('hacia arriba');
                     this.bar1.children.entries[i].y = 175;
                 }
                 var j = i; // esto es por si se sale del rango del Array
@@ -376,17 +419,32 @@ class Scn_play extends Phaser.Scene
                 {
                     j +=2;
                 }
-
-                if(this.bar1.children.entries[j].layout == true && this.bar1.children.entries[j].y == 475)
+                if(this.bar1.children.entries[j].layout == true && this.bar1.children.entries[j].y >= 475 && this.bar1.children.entries[j].y <= 500)
                 {
-                    this.velocityBar1 = 0;
+                    if(this.bar1.children.entries[i].layout == true)
+                    {
+                        this.velocityBar1 = 0;
+                        this.bar1.children.entries[j].y = 475;
+                        if(j-1 <= 0)
+                        {
+                            j = 19;
+                        }
+                        else
+                        {
+                            j -= 1;
+                        }
+                        // console.log('bar1: ' +j);
+                        // console.log('bar1: ' +i);
+                        this.bar1.children.entries[j].y = 325;
+                        this.bar1.children.entries[i].y = 175;
+                    }
                 }
                 
             }
 
             for(var i = 0; i < this.bar2.children.entries.length; i++)
             {
-                this.bar2.children.entries[i].y +=  this.velocityBar2;
+                this.bar2.children.entries[i].y +=  this.velocityBar2*this.bar2.children.entries[i].height;
                 if(this.bar2.children.entries[i].y >= 3165)
                 {
                     this.bar2.children.entries[i].y = 175;
@@ -405,16 +463,31 @@ class Scn_play extends Phaser.Scene
                     j +=2;
                 }
 
-                if(this.bar2.children.entries[j].layout == true && this.bar2.children.entries[j].y == 475)
+                if(this.bar2.children.entries[j].layout == true && this.bar2.children.entries[j].y >= 475 && this.bar2.children.entries[j].y <= 500)
                 {
-                    this.velocityBar2 = 0;
+                    if(this.bar2.children.entries[i].layout == true)
+                    {
+                        this.velocityBar2 = 0;
+                        this.bar2.children.entries[j].y = 475;
+                        if(j-1 <= 0)
+                        {
+                            j = 19;
+                        }
+                        else
+                        {
+                            j -= 1;
+                        }
+                        this.bar2.children.entries[j].y = 325;
+                        this.bar2.children.entries[i].y = 175;
+                    }
+
                 }
             }
 
 
             for(var i = 0; i < this.bar3.children.entries.length; i++)
             {
-                this.bar3.children.entries[i].y +=  this.velocityBar3;
+                this.bar3.children.entries[i].y +=  this.velocityBar3*this.bar3.children.entries[i].height;
                 if(this.bar3.children.entries[i].y >= 3165)
                 {
                     this.bar3.children.entries[i].y = 175;
@@ -433,9 +506,25 @@ class Scn_play extends Phaser.Scene
                     j +=2;
                 }
 
-                if(this.bar3.children.entries[j].layout == true && this.bar3.children.entries[j].y == 475)
+                if(this.bar3.children.entries[j].layout == true && this.bar3.children.entries[j].y >= 475 && this.bar3.children.entries[j].y <= 500)
                 {
-                    this.velocityBar3 = 0;
+                    if(this.bar3.children.entries[i].layout == true)
+                    {
+                        this.velocityBar3 = 0;
+                        this.bar3.children.entries[j].y = 475;
+                        
+                        if(j-1 <= 0)
+                        {
+                            j = 19;
+                        }
+                        else
+                        {
+                            j -= 1;
+                        }
+                        this.bar3.children.entries[j].y = 325;
+                        this.bar3.children.entries[i].y = 175;
+                    }
+
                 }
             }
 
