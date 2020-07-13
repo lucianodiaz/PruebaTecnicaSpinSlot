@@ -211,15 +211,17 @@ class Scn_play extends Phaser.Scene
             this.SpinResults = wrapper.spin();
             console.log(this.SpinResults);
             this.prize = wrapper.getPrizes(this.SpinResults.stopPoints)
-            this.timedEventPrize = this.time.delayedCall(100,this.getReelLayout,[this.SpinResults.reelsLayout],this);
+            this.timedEventPrize = this.time.delayedCall(0,this.getReelLayout,[this.SpinResults.reelsLayout],this);
             //this.reelsLayout = this.SpinResults.reelsLayout;
             this.timedLoopSpin.loop = true;
             this.timedLoopSpin.paused = false;
             this.timedLoopSpin.repeat = 1;
-            this.timedEvent1 = this.time.delayedCall(200,this.spinBar,[0],this);
-            this.timedEvent2 = this.time.delayedCall(300,this.spinBar,[1],this);
-            this.timedEvent3 = this.time.delayedCall(500,this.spinBar,[2],this);
-            
+            this.timedEvent1 = this.time.delayedCall(100,this.spinBar,[0],this);
+            this.timedEvent2 = this.time.delayedCall(200,this.spinBar,[1],this);
+            this.timedEvent3 = this.time.delayedCall(300,this.spinBar,[2],this);
+            this.timerstopBar1.reset();
+            this.timerstopBar2.reset();
+            this.timerstopBar3s.reset();
         });
 
         this.input.on('pointerover',function (event,gameObjects)
@@ -250,30 +252,30 @@ class Scn_play extends Phaser.Scene
             {
                 case 0:
                     this.Bar = this.bar1;
-                    this.velocityBar1 = .08;
+                    this.velocityBar1 = .085;
                     this.timerstopBar1 = this.time.addEvent(
                         {
-                            delay: 1000,
+                            delay: 800,
                             callback: this.onStop(0),
                             callbackScope: this
                         });
                 break;
                 case 1:
                     this.Bar = this.bar2;
-                    this.velocityBar2 = .08;
+                    this.velocityBar2 = .085;
                     this.timerstopBar2 = this.time.addEvent(
                         {
-                            delay: 1000,
+                            delay: 500,
                             callback: this.onStop(1),
                             callbackScope: this
                         });
                 break;
                 case 2:
                     this.Bar = this.bar3;
-                    this.velocityBar3 = .08;
+                    this.velocityBar3 = .085;
                     this.timerstopBar3 = this.time.addEvent(
                         {
-                            delay: 1000,
+                            delay: 500,
                             callback: this.onStop(2),
                             callbackScope: this
                         });
