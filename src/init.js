@@ -1,36 +1,19 @@
+import Bootloader from './bootloader.js';
+import Scn_play from './scenes/scn_play.js';
+
 const config =
 {
     width: 490,
-    height: 570,
+    height: 650,
     parent: "container",
     type: Phaser.AUTO,
 
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#ffffff',
     scene: 
-    {
-        preload: preload,
-        create: create,
-        update: update
-    }
+    [
+        Bootloader,
+        Scn_play
+    ]
 }
 
 var game = new Phaser.Game(config);
-
-
-
-function preload()
-{
-    this.load.image("background","./assets/frame.png");
-}
-
-function create()
-{
-    this.background = this.add.image(0,0,"background");
-
-    this.background.setOrigin(0,0);
-}
-
-function update()
-{
-
-}
