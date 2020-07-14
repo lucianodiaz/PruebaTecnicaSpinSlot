@@ -76,14 +76,16 @@ class Scn_play extends Phaser.Scene
         {
             element.x += 95;
             element.y += 95;
+            element.setScale(0.9);
             element.stepX = 50;
             element.setInteractive();
             element.on("pointerdown", () =>
             {
                 //this.registry.events.emit('spin',this.bar1,this.bar2,this.bar3);    
-                console.log(element.layout);
+                console.log(element.y);
+                console.log(element.height);
             });
-            if(element.y > 530){element.setVisible(false)};
+            //if(element.y > 530){element.setVisible(false)};
         });
 
         this.bar1 = this.add.group();
@@ -219,9 +221,9 @@ class Scn_play extends Phaser.Scene
             this.timedEvent1 = this.time.delayedCall(100,this.spinBar,[0],this);
             this.timedEvent2 = this.time.delayedCall(200,this.spinBar,[1],this);
             this.timedEvent3 = this.time.delayedCall(300,this.spinBar,[2],this);
-            this.timerstopBar1.reset();
-            this.timerstopBar2.reset();
-            this.timerstopBar3s.reset();
+            // this.timerstopBar1.reset();
+            // this.timerstopBar2.reset();
+            // this.timerstopBar3s.reset();
         });
 
         this.input.on('pointerover',function (event,gameObjects)
@@ -255,7 +257,7 @@ class Scn_play extends Phaser.Scene
                     this.velocityBar1 = .085;
                     this.timerstopBar1 = this.time.addEvent(
                         {
-                            delay: 800,
+                            delay: 3000,
                             callback: this.onStop(0),
                             callbackScope: this
                         });
@@ -429,7 +431,8 @@ class Scn_play extends Phaser.Scene
                 break;
         }
     }
-   setBarVelocity(idBar)
+
+    setBarVelocity(idBar)
    {
         switch(idBar)
         {
@@ -444,7 +447,8 @@ class Scn_play extends Phaser.Scene
                 break;
         }
 
-   }
+    }
+
     outOfLimit(bar)
     {
         //console.log(bar);
@@ -468,6 +472,7 @@ class Scn_play extends Phaser.Scene
         this.SpinUpdate(this.bar2,1,this.velocityBar2,this.stopBar2,this.velocityBar1);
         this.SpinUpdate(this.bar3,2,this.velocityBar3,this.stopBar3,this.velocityBar2);
     }
+
     SpinUpdate(bar,idBar,velocityBar,stop,otherBarVelocityStop)
     {
         for(var i = 0; i < bar.children.entries.length; i++)
@@ -497,6 +502,8 @@ class Scn_play extends Phaser.Scene
                     {
                         //velocityBar = 0;
                         this.setBarVelocity(idBar);
+                         var result1 = this.math.linearInterpolation(475,i);
+                        console.log(result1);
                         bar.children.entries[j].y = 475;
                         if(j-1 <= 0)
                         {
@@ -513,12 +520,31 @@ class Scn_play extends Phaser.Scene
             }
     }
 
+    orderPositionSymbols(bar)
+    {
+        for(var i = 0; i < bar.children.entries.length; i++)
+        {
+            if(!bar.children.entries[i].layout)
+            {
+                var j = i;
+                if(j-1 < 0)
+                {
+                    j = 20;
+                }
+                 this.newPosition = bar.children.entries[j-1].y + (bar.children.entries[i].height +10)
+                 bar.children.entries[i].y = this.newPosition;
+            }
+        }
+    }
     update()
     {
         if(this.stopBar1 && this.stopBar2 && this.stopBar3 && this.btnSpin.visible == false &&
             this.velocityBar1 == 0 && this.velocityBar2 == 0 && this.velocityBar3 == 0)
         {
             this.timedLoopSpin.loop = false;
+            this.orderPositionSymbols(this.bar1);
+            this.orderPositionSymbols(this.bar2);
+            this.orderPositionSymbols(this.bar3);
             for(var i = 0; i < this.prize.length; i++)
             {
                 this.registry.events.emit('setLine',(this.prize[i].lineId));
